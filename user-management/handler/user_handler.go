@@ -1,9 +1,9 @@
-package main
+package handler
 
 import (
 	"github.com/Ali-Assar/CashWatch/types"
 	"github.com/Ali-Assar/CashWatch/user-management/db"
-	"github.com/gofiber/fiber"
+	"github.com/gofiber/fiber/v2"
 )
 
 type UserHandler struct {

@@ -3,11 +3,48 @@ package db
 import (
 	"context"
 	"database/sql"
+	"log"
 
 	"github.com/Ali-Assar/CashWatch/types"
+	_ "github.com/lib/pq"
 )
 
-var DBNAME = "user-management"
+func InitDB() (*sql.DB, error) {
+	// Establish database connection
+	db, err := sql.Open("postgres", "postgres://admin:admin@localhost:5432/database?sslmode=disable")
+	if err != nil {
+		return nil, err
+	}
+
+	// Ping the database to verify connection
+	err = db.Ping()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	db.SetMaxOpenConns(5)
+	db.SetMaxIdleConns(10)
+	createTable(db)
+
+	return db, nil
+}
+
+func createTable(db *sql.DB) {
+	createUsersTable := `
+	CREATE TABLE IF NOT EXISTS users (
+		id SERIAL PRIMARY KEY,
+		firstName VARCHAR(200) NOT NULL,
+		lastName VARCHAR(200) NOT NULL,
+		email VARCHAR(300) NOT NULL UNIQUE,
+		encryptedPassword TEXT NOT NULL
+	)
+	`
+	_, err := db.Exec(createUsersTable)
+	if err != nil {
+		log.Fatal("Could not create users table " + err.Error())
+	}
+
+}
 
 type UserStorer interface {
 	GetUserByEmail(context.Context, string) (*types.User, error)
@@ -15,7 +52,7 @@ type UserStorer interface {
 	GetUsers(context.Context) ([]*types.User, error)
 	InsertUser(context.Context, *types.User) (*types.User, error)
 	DeleteUser(context.Context, string) error
-	UpdateUser(*types.User) error
+	UpdateUser(context.Context, *types.User) error
 }
 
 type PostgreSQLUserStore struct {
@@ -71,7 +108,7 @@ func (store *PostgreSQLUserStore) GetUsers(ctx context.Context) ([]*types.User, 
 }
 
 func (store *PostgreSQLUserStore) InsertUser(ctx context.Context, user *types.User) (*types.User, error) {
-	query := "INSERT INTO users(firstName, lastName, email, encryptedPassword) VALUES($1,$2) RETURNING id"
+	query := "INSERT INTO users(firstName, lastName, email, encryptedPassword) VALUES($1, $2, $3, $4) RETURNING id"
 	if err := store.db.QueryRowContext(ctx, query, user.FirstName, user.LastName, user.Email, user.EncryptedPassword).Scan(&user.ID); err != nil {
 		return nil, err
 	}
@@ -86,7 +123,7 @@ func (store *PostgreSQLUserStore) DeleteUser(ctx context.Context, email string) 
 }
 
 func (store *PostgreSQLUserStore) UpdateUser(ctx context.Context, user *types.User) error {
-	query := "UPDATE users SET firstName = $1, lastName = $2, email = $3, password = $4 WHERE id = $5"
+	query := "UPDATE users SET firstName = $1, lastName = $2, email = $3, encryptedPassword = $4 WHERE id = $5"
 	_, err := store.db.ExecContext(ctx, query, user.FirstName, user.LastName, user.Email, user.EncryptedPassword, user.ID)
 	return err
 }

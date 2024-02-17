@@ -1,41 +1,37 @@
 package main
 
 import (
-	"database/sql"
 	"flag"
 	"fmt"
 	"log"
 
-	"github.com/gofiber/fiber"
+	"github.com/Ali-Assar/CashWatch/user-management/db"
+	"github.com/Ali-Assar/CashWatch/user-management/handler"
+	"github.com/gofiber/fiber/v2"
+	_ "github.com/lib/pq"
 )
 
 // TODO FIX this main
 func main() {
-	// Establish database connection
-	db, err := sql.Open("postgres", "postgres://admin:admin@localhost:5432/user")
+	database, err := db.InitDB()
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer db.Close()
+	defer database.Close()
 
-	// Ping the database to verify connection
-	err = db.Ping()
-	if err != nil {
-		log.Fatal(err)
-	}
+	userStore := db.NewPostgreSQLUserStore(database)
 
-	userStore = db.NewMongoUserStore(client)
-	store = &db.Store{User: userStore}
-	userHandler = api.NewUserHandler(userStore)
+	userHandler := handler.NewUserHandler(userStore)
 
 	listenAddr := flag.String("HTTP listenAddr", ":3000", "the listen address of HTTP server")
 	flag.Parse()
-	fmt.Println("server is listening at", ":3000")
+
+	fmt.Println("server is listening at", *listenAddr)
 
 	app := fiber.New()
 	apiv1 := app.Group("/api/v1")
 
-	apiv1.Post("/user/", UserHandler.HandlePostUser)
+	apiv1.Post("/user", userHandler.HandlePostUser)
 
 	// Start Fiber app
 	err = app.Listen(*listenAddr)
