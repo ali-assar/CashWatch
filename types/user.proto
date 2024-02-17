@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option go_package = "github.com/Ali-Assar/CashWatch/user-management/types";
+
+message User {
+    int32 userID = 1;
+    string email = 2;
+    string password = 3;
+}
+
+service UserService {
+    rpc CreateUser (User) returns (User);
+    rpc GetUserByID (GetUserRequest) returns (User);
+}
+
+message GetUserRequest {
+    int32 user_id = 1;
+}

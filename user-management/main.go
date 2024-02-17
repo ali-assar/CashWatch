@@ -3,13 +3,18 @@ package main
 import (
 	"flag"
 	"fmt"
-	"log"
-	"net/http"
+
+	"github.com/gofiber/fiber"
 )
 
 func main() {
 	listenAddr := flag.String("HTTP listenAddr", ":3000", "the listen address of HTTP server")
 	flag.Parse()
 	fmt.Println("server is listening at", ":3000")
-	log.Fatal(http.ListenAndServe(*listenAddr, nil))
+	app := fiber.New()
+	app.Post("/api/user/register", RegisterHandler)
+	app.Post("/api/user/login", LoginHandler)
+	app.Get("/api/user/profile", ProfileHandler)
+	app.Listen(listenAddr)
+
 }
