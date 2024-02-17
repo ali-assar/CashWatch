@@ -5,7 +5,9 @@ option go_package = "github.com/Ali-Assar/CashWatch/types";
 message User {
     int32 ID = 1;
     string email = 2;
-    string password = 3;
+    string firstName = 3;
+    string lastName = 4;
+    string encryptedPassword = 5;
 }
 
 service UserService {
