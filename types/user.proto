@@ -1,12 +1,14 @@
+
+//PATH="${PATH}:${HOME}/go/bin"
 syntax = "proto3";
 
 option go_package = "github.com/Ali-Assar/CashWatch/types";
 
 message User {
-    int32 ID = 1;
-    string email = 2;
-    string firstName = 3;
-    string lastName = 4;
+    int32 iD = 1;
+    string email = 2 [json_name="email"];
+    string firstName = 3 [json_name="firstName"];
+    string lastName = 4 [json_name="lastName"];
     string encryptedPassword = 5;
 }
 
