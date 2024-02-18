@@ -24,12 +24,12 @@ func InitDB() (*sql.DB, error) {
 
 	db.SetMaxOpenConns(5)
 	db.SetMaxIdleConns(10)
-	createTable(db)
+	CreateTable(db)
 
 	return db, nil
 }
 
-func createTable(db *sql.DB) {
+func CreateTable(db *sql.DB) {
 	createUsersTable := `
 	CREATE TABLE IF NOT EXISTS users (
 		id SERIAL PRIMARY KEY,

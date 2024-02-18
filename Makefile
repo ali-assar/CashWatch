@@ -2,6 +2,9 @@ user:
 	@go build -o bin/user ./user-management
 	@./bin/user
 
+seed:
+	@go run scripts/seed.go
+	
 test:
 	go test -v ./...
 
