@@ -2,7 +2,6 @@ package handler
 
 import (
 	"fmt"
-	"strconv"
 	"time"
 
 	"github.com/Ali-Assar/CashWatch/user-management/db"
@@ -34,8 +33,8 @@ func JWTAuthentication(userStore db.UserStorer) fiber.Handler {
 		if time.Now().After(expires) {
 			return fmt.Errorf("unauthorized")
 		}
-		idStr := claims["id"].(string)
-		id, _ := strconv.Atoi(idStr)
+
+		id := claims["id"]
 
 		user, err := userStore.GetUserByID(c.Context(), id)
 		if err != nil {

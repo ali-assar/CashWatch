@@ -43,12 +43,11 @@ func createTable(db *sql.DB) {
 	if err != nil {
 		log.Fatal("Could not create users table " + err.Error())
 	}
-
 }
 
 type UserStorer interface {
 	GetUserByEmail(context.Context, string) (*types.User, error)
-	GetUserByID(context.Context, int) (*types.User, error)
+	GetUserByID(context.Context, any) (*types.User, error)
 	GetUsers(context.Context) ([]*types.User, error)
 	InsertUser(context.Context, *types.User) (*types.User, error)
 	DeleteUser(context.Context, string) error
@@ -76,7 +75,7 @@ func (store *PostgreSQLUserStore) GetUserByEmail(ctx context.Context, email stri
 	return &user, nil
 }
 
-func (store *PostgreSQLUserStore) GetUserByID(ctx context.Context, id int) (*types.User, error) {
+func (store *PostgreSQLUserStore) GetUserByID(ctx context.Context, id any) (*types.User, error) {
 	query := "SELECT id, firstName, lastName, email FROM users where id = $1"
 	row := store.db.QueryRowContext(ctx, query, id)
 	var user types.User

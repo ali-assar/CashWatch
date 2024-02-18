@@ -8,7 +8,6 @@ import (
 	"github.com/Ali-Assar/CashWatch/user-management/db"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
-	"golang.org/x/crypto/bcrypt"
 )
 
 // TODO: handle error
@@ -47,30 +46,25 @@ func (h *AuthHandler) HandleAuthenticate(c *fiber.Ctx) error {
 		return err
 	}
 
-	if err := bcrypt.CompareHashAndPassword([]byte(user.EncryptedPassword), []byte(params.Password)); err != nil {
-		return err
+	if !types.IsPasswordValid(user.EncryptedPassword, params.Password) {
+		return fmt.Errorf("invalid credentials")
 	}
-
-	// if !types.IsPasswordValid(user.EncryptedPassword, params.Password) {
-	// 	return fmt.Errorf("invalid credentials")
-	// }
 
 	resp := AuthResponse{
 		User:  user,
 		Token: CreateTokenFromUser(user),
 	}
 	return c.JSON(resp)
-
 }
 
 func CreateTokenFromUser(user *types.User) string {
-
 	expires := time.Now().Add(time.Hour * 4).Format(time.RFC3339)
 	claims := jwt.MapClaims{
 		"id":      user.ID,
 		"email":   user.Email,
 		"expires": expires,
 	}
+
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	secret := "JWTSECRET"
 	tokenStr, err := token.SignedString([]byte(secret))
