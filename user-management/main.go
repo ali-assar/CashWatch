@@ -22,6 +22,7 @@ func main() {
 	userStore := db.NewPostgreSQLUserStore(database)
 
 	userHandler := handler.NewUserHandler(userStore)
+	authHandler := handler.NewAuthHandler(userStore)
 
 	listenAddr := flag.String("HTTP listenAddr", ":3000", "the listen address of HTTP server")
 	flag.Parse()
@@ -29,9 +30,14 @@ func main() {
 	fmt.Println("server is listening at", *listenAddr)
 
 	app := fiber.New()
-	apiv1 := app.Group("/api/v1")
+	auth := app.Group("/login")
+	apiRegister := app.Group("/")
+	apiv1 := app.Group("/api/v1", handler.JWTAuthentication(userStore))
 
-	apiv1.Post("/user", userHandler.HandlePostUser)
+	//auth
+	auth.Post("/auth", authHandler.HandleAuthenticate)
+
+	apiRegister.Post("/register", userHandler.HandlePostUser)
 	apiv1.Get("/user", userHandler.HandleGetUsers)
 	apiv1.Get("/user/:id", userHandler.HandleGetUserByID)
 	apiv1.Put("/user/:id", userHandler.HandlePutUser)

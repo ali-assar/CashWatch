@@ -7,7 +7,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-const bcryptCost = 12
+const BcryptCost = 12
 
 const minFirstNameLen = 2
 const minLastNameLen = 2
@@ -65,7 +65,7 @@ func isEmailValid(e string) bool {
 }
 
 func NewUserFormParams(params CreateUserParams) (*User, error) {
-	encpw, err := bcrypt.GenerateFromPassword([]byte(params.Password), bcryptCost)
+	encpw, err := bcrypt.GenerateFromPassword([]byte(params.Password), BcryptCost)
 	if err != nil {
 		return nil, err
 	}

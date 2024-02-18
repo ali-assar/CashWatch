@@ -66,11 +66,11 @@ func NewPostgreSQLUserStore(db *sql.DB) *PostgreSQLUserStore {
 }
 
 func (store *PostgreSQLUserStore) GetUserByEmail(ctx context.Context, email string) (*types.User, error) {
-	query := "SELECT id, firstName, lastName , email FROM users where email = $1"
+	query := "SELECT id, email, encryptedPassword FROM users where email = $1"
 	row := store.db.QueryRowContext(ctx, query, email)
 	var user types.User
 
-	if err := row.Scan(&user.ID, &user.FirstName, &user.LastName, &user.Email); err != nil {
+	if err := row.Scan(&user.ID, &user.Email, &user.EncryptedPassword); err != nil {
 		return nil, err
 	}
 	return &user, nil
