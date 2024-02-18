@@ -52,7 +52,7 @@ type UserStorer interface {
 	GetUsers(context.Context) ([]*types.User, error)
 	InsertUser(context.Context, *types.User) (*types.User, error)
 	DeleteUser(context.Context, string) error
-	UpdateUser(context.Context, *types.User) error
+	UpdateUser(context.Context, int, *types.UpdateUserParams) error
 }
 
 type PostgreSQLUserStore struct {
@@ -70,7 +70,7 @@ func (store *PostgreSQLUserStore) GetUserByEmail(ctx context.Context, email stri
 	row := store.db.QueryRowContext(ctx, query, email)
 	var user types.User
 
-	if err := row.Scan(&user.ID, &user.Email, &user.EncryptedPassword); err != nil {
+	if err := row.Scan(&user.ID, &user.FirstName, &user.LastName, &user.Email); err != nil {
 		return nil, err
 	}
 	return &user, nil
@@ -81,7 +81,7 @@ func (store *PostgreSQLUserStore) GetUserByID(ctx context.Context, id int) (*typ
 	row := store.db.QueryRowContext(ctx, query, id)
 	var user types.User
 
-	if err := row.Scan(&user.ID, &user.Email, &user.EncryptedPassword); err != nil {
+	if err := row.Scan(&user.ID, &user.FirstName, &user.LastName, &user.Email); err != nil {
 		return nil, err
 	}
 	return &user, nil
@@ -99,7 +99,7 @@ func (store *PostgreSQLUserStore) GetUsers(ctx context.Context) ([]*types.User, 
 	var users []*types.User
 	for rows.Next() {
 		var user types.User
-		if err := rows.Scan(&user.ID, &user.Email, &user.EncryptedPassword); err != nil {
+		if err := rows.Scan(&user.ID, &user.FirstName, &user.LastName, &user.Email); err != nil {
 			return nil, err
 		}
 		users = append(users, &user)
@@ -122,8 +122,8 @@ func (store *PostgreSQLUserStore) DeleteUser(ctx context.Context, email string) 
 	return err
 }
 
-func (store *PostgreSQLUserStore) UpdateUser(ctx context.Context, user *types.User) error {
-	query := "UPDATE users SET firstName = $1, lastName = $2, email = $3, encryptedPassword = $4 WHERE id = $5"
-	_, err := store.db.ExecContext(ctx, query, user.FirstName, user.LastName, user.Email, user.EncryptedPassword, user.ID)
+func (store *PostgreSQLUserStore) UpdateUser(ctx context.Context, id int, user *types.UpdateUserParams) error {
+	query := "UPDATE users SET firstName = $1, lastName = $2 WHERE id = $3"
+	_, err := store.db.ExecContext(ctx, query, user.FirstName, user.LastName, id)
 	return err
 }

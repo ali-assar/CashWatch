@@ -13,6 +13,22 @@ const minFirstNameLen = 2
 const minLastNameLen = 2
 const minPasswordLen = 7
 
+type UpdateUserParams struct {
+	FirstName string `json:"firstName"`
+	LastName  string `json:"lastName"`
+}
+
+func (params UpdateUserParams) ValidateUpdate() map[string]string {
+	errors := make(map[string]string, 2)
+	if len(params.FirstName) < minFirstNameLen {
+		errors["firstName"] = fmt.Sprintf("first name length should at least %d characters", minFirstNameLen)
+	}
+	if len(params.LastName) < minLastNameLen {
+		errors["lastName"] = fmt.Sprintf("last name length should at least %d characters", minLastNameLen)
+	}
+	return errors
+}
+
 type CreateUserParams struct {
 	ID        string `json:"id,omitempty"`
 	FirstName string `json:"firstName"`

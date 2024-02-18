@@ -32,6 +32,11 @@ func main() {
 	apiv1 := app.Group("/api/v1")
 
 	apiv1.Post("/user", userHandler.HandlePostUser)
+	apiv1.Get("/user", userHandler.HandleGetUsers)
+	apiv1.Get("/user/:id", userHandler.HandleGetUserByID)
+	apiv1.Put("/user/:id", userHandler.HandlePutUser)
+	apiv1.Delete("/user/:email", userHandler.HandleDeleteUser)
+	//TODO: implement get user by email
 
 	// Start Fiber app
 	err = app.Listen(*listenAddr)
