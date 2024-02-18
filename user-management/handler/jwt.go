@@ -54,7 +54,7 @@ func validateToken(tokenStr string) (jwt.MapClaims, error) {
 			return nil, fmt.Errorf("unauthorized")
 		}
 
-		secret := "JWT_SECRET"
+		secret := "JWTSECRET"
 		return []byte(secret), nil
 	})
 

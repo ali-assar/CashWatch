@@ -30,8 +30,8 @@ func main() {
 	fmt.Println("server is listening at", *listenAddr)
 
 	app := fiber.New()
-	auth := app.Group("/login")
 	apiRegister := app.Group("/")
+	auth := app.Group("/api")
 	apiv1 := app.Group("/api/v1", handler.JWTAuthentication(userStore))
 
 	//auth
