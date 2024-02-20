@@ -32,7 +32,6 @@ func (h *UserHandler) HandlePutUser(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-
 	if h.userStore.UpdateUser(c.Context(), id, &params); err != nil {
 		return err
 	}

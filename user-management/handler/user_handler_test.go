@@ -167,7 +167,6 @@ func TestUpdateUser(t *testing.T) {
 
 	userHandler := NewUserHandler(userStore)
 	app.Post("/", userHandler.HandlePostUser)
-
 	insertedUser := types.CreateUserParams{
 		FirstName: "foo",
 		LastName:  "bar",
@@ -177,22 +176,29 @@ func TestUpdateUser(t *testing.T) {
 	user := createUserAndPost(t, app, userHandler, insertedUser)
 
 	app.Put("/:id", userHandler.HandleGetUserByID)
-
 	updatedParams := &types.CreateUserParams{
 		FirstName: "poo",
-		LastName:  "dragonWarrior",
+		LastName:  "baz",
 	}
-
 	b, _ := json.Marshal(updatedParams)
 
 	req := httptest.NewRequest("PUT", "/1", bytes.NewReader(b))
 	req.Header.Add("Content-Type", "application/json")
-
 	resp, err := app.Test(req)
 	if err != nil {
 		t.Fatal(err)
 	}
 
+	if resp.StatusCode != 200 {
+		t.Errorf("expected status code 200, but got %d", resp.StatusCode)
+	}
+
+	app.Get("/:id", userHandler.HandleGetUserByID)
+	req = httptest.NewRequest("GET", "/"+"1", nil)
+	resp, err = app.Test(req)
+	if err != nil {
+		t.Fatal(err)
+	}
 	var updatedUser types.User
 	err = json.NewDecoder(resp.Body).Decode(&updatedUser)
 	if err != nil {
@@ -201,10 +207,10 @@ func TestUpdateUser(t *testing.T) {
 	if resp.StatusCode != 200 {
 		t.Errorf("expected status code 200, but got %d", resp.StatusCode)
 	}
-	if updatedUser.FirstName == user.FirstName {
+	if updatedUser.FirstName == updatedParams.FirstName {
 		t.Errorf("expected the first name to be updated, but it's still %s", user.FirstName)
 	}
-	if updatedUser.LastName == user.LastName {
+	if updatedUser.LastName == updatedParams.LastName {
 		t.Errorf("expected the last name to be updated, but it's still %s", user.LastName)
 	}
 }
