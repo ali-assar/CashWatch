@@ -48,7 +48,6 @@ func TestPostUser(t *testing.T) {
 		Email:     "foo@bar.com",
 		Password:  "foobar123",
 	}
-
 	user := createUserAndPost(t, app, userHandler, params)
 
 	//TODO: do not return EncryptedPassword
