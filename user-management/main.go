@@ -5,11 +5,15 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/Ali-Assar/CashWatch/types"
 	"github.com/Ali-Assar/CashWatch/user-management/db"
 	"github.com/Ali-Assar/CashWatch/user-management/handler"
 	"github.com/gofiber/fiber/v2"
 	_ "github.com/lib/pq"
+	"google.golang.org/grpc"
 )
+
+const budgetServiceAddress = "http://llocalhost:50051"
 
 func main() {
 	database, err := db.InitDB()
@@ -33,6 +37,11 @@ func main() {
 		auth        = app.Group("/api")
 		apiv1       = app.Group("/api/v1", handler.JWTAuthentication(userStore))
 	)
+	budgetConn, err := grpc.Dial(budgetServiceAddress, grpc.WithInsecure())
+	if err != nil {
+		log.Fatal("Failed to connect to budget service:", err)
+	}
+	_ = types.NewBudgetServiceClient(budgetConn)
 
 	//auth
 	auth.Post("/auth", authHandler.HandleAuthenticate)
