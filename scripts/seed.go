@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/Ali-Assar/CashWatch/authentication-service/db"
+	"github.com/Ali-Assar/CashWatch/authentication-service/handler"
 	"github.com/Ali-Assar/CashWatch/types"
-	"github.com/Ali-Assar/CashWatch/user-management/db"
-	"github.com/Ali-Assar/CashWatch/user-management/handler"
 )
 
 func main() {

@@ -6,8 +6,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/Ali-Assar/CashWatch/authentication-service/db"
 	"github.com/Ali-Assar/CashWatch/types"
-	"github.com/Ali-Assar/CashWatch/user-management/db"
 	"github.com/gofiber/fiber/v2"
 )
 

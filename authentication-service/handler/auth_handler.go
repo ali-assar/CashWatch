@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/Ali-Assar/CashWatch/authentication-service/db"
 	"github.com/Ali-Assar/CashWatch/types"
-	"github.com/Ali-Assar/CashWatch/user-management/db"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
 )
