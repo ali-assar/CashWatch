@@ -1,0 +1,25 @@
+// PATH="${PATH}:${HOME}/go/bin"
+syntax = "proto3";
+
+option go_package = "github.com/Ali-Assar/cashwatch/types";
+
+package users;
+
+message User {
+    int64 iD = 1;
+    string firstName = 2;
+    string lastName = 3;
+    string email = 4;
+    string EncryptedPassword = 5;
+}
+
+service UserService {
+    rpc CreateUser(User) returns (User);
+    rpc GetUserByID(UserRequest) returns (User);
+    rpc UpdateUserByID(User) returns (User);
+    rpc DeleteUserByID(UserRequest) returns (User);
+}
+
+message UserRequest {
+    int64 id = 1;
+}
