@@ -8,6 +8,7 @@ package types
 
 import (
 	context "context"
+	empty "github.com/golang/protobuf/ptypes/empty"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -25,7 +26,7 @@ type UserServiceClient interface {
 	InsertUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*User, error)
 	GetUserByID(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*User, error)
 	UpdateUserByID(ctx context.Context, in *User, opts ...grpc.CallOption) (*User, error)
-	DeleteUserByID(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*User, error)
+	DeleteUserByID(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*empty.Empty, error)
 }
 
 type userServiceClient struct {
@@ -63,8 +64,8 @@ func (c *userServiceClient) UpdateUserByID(ctx context.Context, in *User, opts .
 	return out, nil
 }
 
-func (c *userServiceClient) DeleteUserByID(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*User, error) {
-	out := new(User)
+func (c *userServiceClient) DeleteUserByID(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
 	err := c.cc.Invoke(ctx, "/users.UserService/DeleteUserByID", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -79,7 +80,7 @@ type UserServiceServer interface {
 	InsertUser(context.Context, *User) (*User, error)
 	GetUserByID(context.Context, *UserRequest) (*User, error)
 	UpdateUserByID(context.Context, *User) (*User, error)
-	DeleteUserByID(context.Context, *UserRequest) (*User, error)
+	DeleteUserByID(context.Context, *UserRequest) (*empty.Empty, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -96,7 +97,7 @@ func (UnimplementedUserServiceServer) GetUserByID(context.Context, *UserRequest)
 func (UnimplementedUserServiceServer) UpdateUserByID(context.Context, *User) (*User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserByID not implemented")
 }
-func (UnimplementedUserServiceServer) DeleteUserByID(context.Context, *UserRequest) (*User, error) {
+func (UnimplementedUserServiceServer) DeleteUserByID(context.Context, *UserRequest) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteUserByID not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}

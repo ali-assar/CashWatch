@@ -5,8 +5,10 @@ option go_package = "github.com/Ali-Assar/cashwatch/types";
 
 package users;
 
+import "google/protobuf/empty.proto";
+
 message User {
-    int64 iD = 1;
+    string iD = 1;
     string firstName = 2;
     string lastName = 3;
     string email = 4;
@@ -17,9 +19,9 @@ service UserService {
     rpc InsertUser(User) returns (User);
     rpc GetUserByID(UserRequest) returns (User);
     rpc UpdateUserByID(User) returns (User);
-    rpc DeleteUserByID(UserRequest) returns (User);
+    rpc DeleteUserByID(UserRequest) returns (google.protobuf.Empty);
 }
 
 message UserRequest {
-    int64 id = 1;
+    string email = 1;
 }
