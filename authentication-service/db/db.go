@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"log"
 
-	"github.com/Ali-Assar/CashWatch/types"
+	pb "github.com/Ali-Assar/CashWatch/types"
 	_ "github.com/lib/pq"
 )
 
@@ -46,12 +46,12 @@ func CreateTable(db *sql.DB) {
 }
 
 type UserStorer interface {
-	GetUserByEmail(context.Context, string) (*types.User, error)
-	GetUserByID(context.Context, any) (*types.User, error)
-	GetUsers(context.Context) ([]*types.User, error)
-	InsertUser(context.Context, *types.User) (*types.User, error)
+	GetUserByEmail(context.Context, string) (*pb.User, error)
+	GetUserByID(context.Context, any) (*pb.User, error)
+	GetUsers(context.Context) ([]*pb.User, error)
+	InsertUser(context.Context, *pb.User) (*pb.User, error)
 	DeleteUser(context.Context, string) error
-	UpdateUser(context.Context, int, *types.UpdateUserParams) error
+	UpdateUser(context.Context, int, *pb.UpdateUserParams) error
 }
 
 type PostgreSQLUserStore struct {
@@ -64,21 +64,21 @@ func NewPostgreSQLUserStore(db *sql.DB) *PostgreSQLUserStore {
 	}
 }
 
-func (store *PostgreSQLUserStore) GetUserByEmail(ctx context.Context, email string) (*types.User, error) {
-	query := "SELECT id, email, encryptedPassword FROM users where email = $1"
+func (store *PostgreSQLUserStore) GetUserByEmail(ctx context.Context, email string) (*pb.User, error) {
+	query := "SELECT id,firstName, lastName, email, encryptedPassword FROM users where email = $1"
 	row := store.db.QueryRowContext(ctx, query, email)
-	var user types.User
+	var user pb.User
 
-	if err := row.Scan(&user.ID, &user.Email, &user.Password); err != nil {
+	if err := row.Scan(&user.ID, &user.FirstName, &user.LastName, &user.Email, &user.Password); err != nil {
 		return nil, err
 	}
 	return &user, nil
 }
 
-func (store *PostgreSQLUserStore) GetUserByID(ctx context.Context, id any) (*types.User, error) {
+func (store *PostgreSQLUserStore) GetUserByID(ctx context.Context, id any) (*pb.User, error) {
 	query := "SELECT id, firstName, lastName, email FROM users where id = $1"
 	row := store.db.QueryRowContext(ctx, query, id)
-	var user types.User
+	var user pb.User
 
 	if err := row.Scan(&user.ID, &user.FirstName, &user.LastName, &user.Email); err != nil {
 		return nil, err
@@ -86,7 +86,7 @@ func (store *PostgreSQLUserStore) GetUserByID(ctx context.Context, id any) (*typ
 	return &user, nil
 }
 
-func (store *PostgreSQLUserStore) GetUsers(ctx context.Context) ([]*types.User, error) {
+func (store *PostgreSQLUserStore) GetUsers(ctx context.Context) ([]*pb.User, error) {
 	query := "SELECT id, firstName, lastName, email FROM users"
 	rows, err := store.db.QueryContext(ctx, query)
 	if err != nil {
@@ -95,9 +95,9 @@ func (store *PostgreSQLUserStore) GetUsers(ctx context.Context) ([]*types.User, 
 
 	defer rows.Close()
 
-	var users []*types.User
+	var users []*pb.User
 	for rows.Next() {
-		var user types.User
+		var user pb.User
 		if err := rows.Scan(&user.ID, &user.FirstName, &user.LastName, &user.Email); err != nil {
 			return nil, err
 		}
@@ -106,7 +106,7 @@ func (store *PostgreSQLUserStore) GetUsers(ctx context.Context) ([]*types.User, 
 	return users, nil
 }
 
-func (store *PostgreSQLUserStore) InsertUser(ctx context.Context, user *types.User) (*types.User, error) {
+func (store *PostgreSQLUserStore) InsertUser(ctx context.Context, user *pb.User) (*pb.User, error) {
 	query := "INSERT INTO users(firstName, lastName, email, encryptedPassword) VALUES($1, $2, $3, $4) RETURNING id"
 	if err := store.db.QueryRowContext(ctx, query, user.FirstName, user.LastName, user.Email, user.Password).Scan(&user.ID); err != nil {
 		return nil, err
@@ -121,7 +121,7 @@ func (store *PostgreSQLUserStore) DeleteUser(ctx context.Context, email string) 
 	return err
 }
 
-func (store *PostgreSQLUserStore) UpdateUser(ctx context.Context, id int, user *types.UpdateUserParams) error {
+func (store *PostgreSQLUserStore) UpdateUser(ctx context.Context, id int, user *pb.UpdateUserParams) error {
 	query := "UPDATE users SET firstName = $1, lastName = $2 WHERE id = $3"
 	_, err := store.db.ExecContext(ctx, query, user.FirstName, user.LastName, id)
 	return err

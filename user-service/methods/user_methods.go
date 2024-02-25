@@ -60,9 +60,21 @@ func (s *UserServiceServer) DeleteUserByID(ctx context.Context, req *pb.UserRequ
 }
 
 func (s *UserServiceServer) GetUserByID(ctx context.Context, req *pb.UserRequest) (*pb.User, error) {
-	// Implement the logic to delete a user by ID from your database
-	// Return an Empty response (or an error if something goes wrong)
-	return nil, nil
+	validate := validator.New()
+	if err := validate.Struct(req); err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "Validation error: %v", err)
+	}
+
+	fetchedUser, err := s.UserStore.GetUserByEmail(ctx, req.GetEmail())
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.User{
+		Email:     fetchedUser.Email,
+		FirstName: fetchedUser.FirstName,
+		LastName:  fetchedUser.LastName,
+		Password:  ""}, nil
 }
 func (s *UserServiceServer) UpdateUserByID(ctx context.Context, req *pb.User) (*pb.User, error) {
 	// Implement the logic to delete a user by ID from your database
