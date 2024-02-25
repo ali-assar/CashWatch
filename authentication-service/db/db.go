@@ -69,7 +69,7 @@ func (store *PostgreSQLUserStore) GetUserByEmail(ctx context.Context, email stri
 	row := store.db.QueryRowContext(ctx, query, email)
 	var user types.User
 
-	if err := row.Scan(&user.ID, &user.Email, &user.EncryptedPassword); err != nil {
+	if err := row.Scan(&user.ID, &user.Email, &user.Password); err != nil {
 		return nil, err
 	}
 	return &user, nil
@@ -108,7 +108,7 @@ func (store *PostgreSQLUserStore) GetUsers(ctx context.Context) ([]*types.User, 
 
 func (store *PostgreSQLUserStore) InsertUser(ctx context.Context, user *types.User) (*types.User, error) {
 	query := "INSERT INTO users(firstName, lastName, email, encryptedPassword) VALUES($1, $2, $3, $4) RETURNING id"
-	if err := store.db.QueryRowContext(ctx, query, user.FirstName, user.LastName, user.Email, user.EncryptedPassword).Scan(&user.ID); err != nil {
+	if err := store.db.QueryRowContext(ctx, query, user.FirstName, user.LastName, user.Email, user.Password).Scan(&user.ID); err != nil {
 		return nil, err
 	}
 

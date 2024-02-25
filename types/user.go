@@ -70,9 +70,9 @@ func NewUserFormParams(params CreateUserParams) (*User, error) {
 		return nil, err
 	}
 	return &User{
-		FirstName:         params.FirstName,
-		LastName:          params.LastName,
-		Email:             params.Email,
-		EncryptedPassword: string(encpw),
+		FirstName: params.FirstName,
+		LastName:  params.LastName,
+		Email:     params.Email,
+		Password:  string(encpw),
 	}, nil
 }

@@ -46,7 +46,7 @@ func (h *AuthHandler) HandleAuthenticate(c *fiber.Ctx) error {
 		return err
 	}
 
-	if !types.IsPasswordValid(user.EncryptedPassword, params.Password) {
+	if !types.IsPasswordValid(user.Password, params.Password) {
 		return fmt.Errorf("invalid credentials")
 	}
 

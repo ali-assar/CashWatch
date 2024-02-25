@@ -10,11 +10,11 @@ message User {
     string firstName = 2;
     string lastName = 3;
     string email = 4;
-    string EncryptedPassword = 5;
+    string password = 5;
 }
 
 service UserService {
-    rpc CreateUser(User) returns (User);
+    rpc InsertUser(User) returns (User);
     rpc GetUserByID(UserRequest) returns (User);
     rpc UpdateUserByID(User) returns (User);
     rpc DeleteUserByID(UserRequest) returns (User);
