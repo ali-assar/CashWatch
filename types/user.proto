@@ -18,10 +18,14 @@ message User {
 service UserService {
     rpc InsertUser(User) returns (User);
     rpc GetUserByID(UserRequest) returns (User);
-    rpc UpdateUserByID(User) returns (User);
+    rpc UpdateUserByID(UpdateUserRequest) returns (google.protobuf.Empty);
     rpc DeleteUserByID(UserRequest) returns (google.protobuf.Empty);
 }
-
+message UpdateUserRequest{
+    string firstName = 1;
+    string lastName = 2;
+    string email = 3;
+}
 message UserRequest {
     string email = 1;
 }

@@ -51,7 +51,8 @@ type UserStorer interface {
 	GetUsers(context.Context) ([]*pb.User, error)
 	InsertUser(context.Context, *pb.User) (*pb.User, error)
 	DeleteUser(context.Context, string) error
-	UpdateUser(context.Context, int, *pb.UpdateUserParams) error
+	UpdateUser(context.Context, string, *pb.UpdateUserParams) error
+	UpdateUserByEmail(context.Context, string, *pb.UpdateUserRequest) error
 }
 
 type PostgreSQLUserStore struct {
@@ -121,8 +122,14 @@ func (store *PostgreSQLUserStore) DeleteUser(ctx context.Context, email string) 
 	return err
 }
 
-func (store *PostgreSQLUserStore) UpdateUser(ctx context.Context, id int, user *pb.UpdateUserParams) error {
-	query := "UPDATE users SET firstName = $1, lastName = $2 WHERE id = $3"
-	_, err := store.db.ExecContext(ctx, query, user.FirstName, user.LastName, id)
+func (store *PostgreSQLUserStore) UpdateUser(ctx context.Context, email string, user *pb.UpdateUserParams) error {
+	query := "UPDATE users SET firstName = $1, lastName = $2 WHERE email = $3"
+	_, err := store.db.ExecContext(ctx, query, user.FirstName, user.LastName, email)
+	return err
+}
+
+func (store *PostgreSQLUserStore) UpdateUserByEmail(ctx context.Context, email string, user *pb.UpdateUserRequest) error {
+	query := "UPDATE users SET firstName = $1, lastName = $2 WHERE email = $3"
+	_, err := store.db.ExecContext(ctx, query, user.FirstName, user.LastName, email)
 	return err
 }

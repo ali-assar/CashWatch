@@ -25,7 +25,7 @@ const _ = grpc.SupportPackageIsVersion7
 type UserServiceClient interface {
 	InsertUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*User, error)
 	GetUserByID(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*User, error)
-	UpdateUserByID(ctx context.Context, in *User, opts ...grpc.CallOption) (*User, error)
+	UpdateUserByID(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*empty.Empty, error)
 	DeleteUserByID(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*empty.Empty, error)
 }
 
@@ -55,8 +55,8 @@ func (c *userServiceClient) GetUserByID(ctx context.Context, in *UserRequest, op
 	return out, nil
 }
 
-func (c *userServiceClient) UpdateUserByID(ctx context.Context, in *User, opts ...grpc.CallOption) (*User, error) {
-	out := new(User)
+func (c *userServiceClient) UpdateUserByID(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
 	err := c.cc.Invoke(ctx, "/users.UserService/UpdateUserByID", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -79,7 +79,7 @@ func (c *userServiceClient) DeleteUserByID(ctx context.Context, in *UserRequest,
 type UserServiceServer interface {
 	InsertUser(context.Context, *User) (*User, error)
 	GetUserByID(context.Context, *UserRequest) (*User, error)
-	UpdateUserByID(context.Context, *User) (*User, error)
+	UpdateUserByID(context.Context, *UpdateUserRequest) (*empty.Empty, error)
 	DeleteUserByID(context.Context, *UserRequest) (*empty.Empty, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
@@ -94,7 +94,7 @@ func (UnimplementedUserServiceServer) InsertUser(context.Context, *User) (*User,
 func (UnimplementedUserServiceServer) GetUserByID(context.Context, *UserRequest) (*User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserByID not implemented")
 }
-func (UnimplementedUserServiceServer) UpdateUserByID(context.Context, *User) (*User, error) {
+func (UnimplementedUserServiceServer) UpdateUserByID(context.Context, *UpdateUserRequest) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserByID not implemented")
 }
 func (UnimplementedUserServiceServer) DeleteUserByID(context.Context, *UserRequest) (*empty.Empty, error) {
@@ -150,7 +150,7 @@ func _UserService_GetUserByID_Handler(srv interface{}, ctx context.Context, dec 
 }
 
 func _UserService_UpdateUserByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(User)
+	in := new(UpdateUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -162,7 +162,7 @@ func _UserService_UpdateUserByID_Handler(srv interface{}, ctx context.Context, d
 		FullMethod: "/users.UserService/UpdateUserByID",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).UpdateUserByID(ctx, req.(*User))
+		return srv.(UserServiceServer).UpdateUserByID(ctx, req.(*UpdateUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

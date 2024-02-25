@@ -27,12 +27,13 @@ func (h *UserHandler) HandlePutUser(c *fiber.Ctx) error {
 	// if errors := params.ValidateUpdate; len(errors) > 0 {
 	// 	return c.JSON(errors)
 	// }
-	idStr := c.Params("id")
+	idStr := c.Params("email")
 	id, err := strconv.Atoi(idStr)
+
 	if err != nil {
 		return err
 	}
-	if h.userStore.UpdateUser(c.Context(), id, &params); err != nil {
+	if h.userStore.UpdateUser(c.Context(), idStr, &params); err != nil {
 		return err
 	}
 	return c.JSON(map[string]int{"updated": id})

@@ -96,3 +96,56 @@ func TestGetUser(t *testing.T) {
 	assert.Equal(t, req.Email, user.Email)
 	assert.Empty(t, user.Password)
 }
+
+func TestUpdateUser(t *testing.T) {
+	tdb, err := db.InitDB()
+	if err != nil {
+		t.Errorf("database error")
+	}
+
+	defer tdb.Exec("DROP TABLE users")
+
+	userStore := db.NewPostgreSQLUserStore(tdb)
+
+	server := &UserServiceServer{
+		UserStore: userStore,
+	}
+	req := &pb.User{
+		FirstName: "james",
+		LastName:  "foo",
+		Email:     "james@foo.com",
+		Password:  "secret",
+	}
+
+	_, err = server.InsertUser(context.Background(), req)
+	assert.NoError(t, err, "Error should be nil")
+
+	updateParam := &pb.UpdateUserRequest{
+		FirstName: "bar",
+		LastName:  "baz",
+		Email:     "james@foo.com",
+	}
+	_, err = server.UpdateUserByID(context.Background(), updateParam)
+	assert.NoError(t, err, "Error should be nil")
+
+	email := &pb.UserRequest{Email: "james@foo.com"}
+	user, err := server.GetUserByID(context.Background(), email)
+
+	assert.NoError(t, err, "Error should be nil")
+	assert.Equal(t, updateParam.FirstName, user.FirstName)
+	assert.Equal(t, updateParam.LastName, user.LastName)
+
+	// Test with an invalid email (non-existent user)
+	updateInvalidParam := &pb.UpdateUserRequest{
+		FirstName: "james",
+		LastName:  "foo",
+		Email:     "nonexistent@example.com", // Invalid email
+	}
+	server.UpdateUserByID(context.Background(), updateInvalidParam)
+
+	user, err = server.GetUserByID(context.Background(), email)
+	assert.NoError(t, err, "Error should be nil")
+	assert.NotEqual(t, updateInvalidParam.FirstName, user.FirstName)
+	assert.NotEqual(t, updateInvalidParam.LastName, user.LastName)
+
+}
