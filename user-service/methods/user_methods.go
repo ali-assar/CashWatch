@@ -46,7 +46,7 @@ func (s *UserServiceServer) InsertUser(ctx context.Context, req *pb.User) (*pb.U
 	return &pb.User{ID: insertedUser.ID}, nil
 }
 
-func (s *UserServiceServer) DeleteUserByID(ctx context.Context, req *pb.UserRequest) (*empty.Empty, error) {
+func (s *UserServiceServer) DeleteUserByEmail(ctx context.Context, req *pb.UserRequest) (*empty.Empty, error) {
 	// Validate request
 	validate := validator.New()
 	if err := validate.Struct(req); err != nil {
@@ -59,7 +59,7 @@ func (s *UserServiceServer) DeleteUserByID(ctx context.Context, req *pb.UserRequ
 	return &empty.Empty{}, nil
 }
 
-func (s *UserServiceServer) GetUserByID(ctx context.Context, req *pb.UserRequest) (*pb.User, error) {
+func (s *UserServiceServer) GetUserByEmail(ctx context.Context, req *pb.UserRequest) (*pb.User, error) {
 	validate := validator.New()
 	if err := validate.Struct(req); err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, "Validation error: %v", err)
@@ -76,7 +76,7 @@ func (s *UserServiceServer) GetUserByID(ctx context.Context, req *pb.UserRequest
 		LastName:  fetchedUser.LastName,
 		Password:  ""}, nil
 }
-func (s *UserServiceServer) UpdateUserByID(ctx context.Context, req *pb.UpdateUserRequest) (*empty.Empty, error) {
+func (s *UserServiceServer) UpdateUserByEmail(ctx context.Context, req *pb.UpdateUserRequest) (*empty.Empty, error) {
 	validate := validator.New()
 	if err := validate.Struct(req); err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, "Validation error: %v", err)

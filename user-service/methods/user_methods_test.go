@@ -59,7 +59,7 @@ func TestDeleteUser(t *testing.T) {
 	assert.NoError(t, err, "Error should be nil")
 
 	email := &pb.UserRequest{Email: "james@foo.com"}
-	_, err = server.DeleteUserByID(context.Background(), email)
+	_, err = server.DeleteUserByEmail(context.Background(), email)
 
 	assert.NoError(t, err, "Error should be nil")
 }
@@ -88,7 +88,7 @@ func TestGetUser(t *testing.T) {
 	assert.NoError(t, err, "Error should be nil")
 
 	email := &pb.UserRequest{Email: "james@foo.com"}
-	user, err := server.GetUserByID(context.Background(), email)
+	user, err := server.GetUserByEmail(context.Background(), email)
 
 	assert.NoError(t, err, "Error should be nil")
 	assert.Equal(t, req.FirstName, user.FirstName)
@@ -125,11 +125,11 @@ func TestUpdateUser(t *testing.T) {
 		LastName:  "baz",
 		Email:     "james@foo.com",
 	}
-	_, err = server.UpdateUserByID(context.Background(), updateParam)
+	_, err = server.UpdateUserByEmail(context.Background(), updateParam)
 	assert.NoError(t, err, "Error should be nil")
 
 	email := &pb.UserRequest{Email: "james@foo.com"}
-	user, err := server.GetUserByID(context.Background(), email)
+	user, err := server.GetUserByEmail(context.Background(), email)
 
 	assert.NoError(t, err, "Error should be nil")
 	assert.Equal(t, updateParam.FirstName, user.FirstName)
@@ -141,9 +141,9 @@ func TestUpdateUser(t *testing.T) {
 		LastName:  "foo",
 		Email:     "nonexistent@example.com", // Invalid email
 	}
-	server.UpdateUserByID(context.Background(), updateInvalidParam)
+	server.UpdateUserByEmail(context.Background(), updateInvalidParam)
 
-	user, err = server.GetUserByID(context.Background(), email)
+	user, err = server.GetUserByEmail(context.Background(), email)
 	assert.NoError(t, err, "Error should be nil")
 	assert.NotEqual(t, updateInvalidParam.FirstName, user.FirstName)
 	assert.NotEqual(t, updateInvalidParam.LastName, user.LastName)

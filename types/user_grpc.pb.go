@@ -24,9 +24,9 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserServiceClient interface {
 	InsertUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*User, error)
-	GetUserByID(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*User, error)
-	UpdateUserByID(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*empty.Empty, error)
-	DeleteUserByID(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	GetUserByEmail(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*User, error)
+	UpdateUserByEmail(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	DeleteUserByEmail(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*empty.Empty, error)
 }
 
 type userServiceClient struct {
@@ -46,27 +46,27 @@ func (c *userServiceClient) InsertUser(ctx context.Context, in *User, opts ...gr
 	return out, nil
 }
 
-func (c *userServiceClient) GetUserByID(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*User, error) {
+func (c *userServiceClient) GetUserByEmail(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*User, error) {
 	out := new(User)
-	err := c.cc.Invoke(ctx, "/users.UserService/GetUserByID", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/users.UserService/GetUserByEmail", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *userServiceClient) UpdateUserByID(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+func (c *userServiceClient) UpdateUserByEmail(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
 	out := new(empty.Empty)
-	err := c.cc.Invoke(ctx, "/users.UserService/UpdateUserByID", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/users.UserService/UpdateUserByEmail", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *userServiceClient) DeleteUserByID(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+func (c *userServiceClient) DeleteUserByEmail(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
 	out := new(empty.Empty)
-	err := c.cc.Invoke(ctx, "/users.UserService/DeleteUserByID", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/users.UserService/DeleteUserByEmail", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -78,9 +78,9 @@ func (c *userServiceClient) DeleteUserByID(ctx context.Context, in *UserRequest,
 // for forward compatibility
 type UserServiceServer interface {
 	InsertUser(context.Context, *User) (*User, error)
-	GetUserByID(context.Context, *UserRequest) (*User, error)
-	UpdateUserByID(context.Context, *UpdateUserRequest) (*empty.Empty, error)
-	DeleteUserByID(context.Context, *UserRequest) (*empty.Empty, error)
+	GetUserByEmail(context.Context, *UserRequest) (*User, error)
+	UpdateUserByEmail(context.Context, *UpdateUserRequest) (*empty.Empty, error)
+	DeleteUserByEmail(context.Context, *UserRequest) (*empty.Empty, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -91,14 +91,14 @@ type UnimplementedUserServiceServer struct {
 func (UnimplementedUserServiceServer) InsertUser(context.Context, *User) (*User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method InsertUser not implemented")
 }
-func (UnimplementedUserServiceServer) GetUserByID(context.Context, *UserRequest) (*User, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetUserByID not implemented")
+func (UnimplementedUserServiceServer) GetUserByEmail(context.Context, *UserRequest) (*User, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserByEmail not implemented")
 }
-func (UnimplementedUserServiceServer) UpdateUserByID(context.Context, *UpdateUserRequest) (*empty.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserByID not implemented")
+func (UnimplementedUserServiceServer) UpdateUserByEmail(context.Context, *UpdateUserRequest) (*empty.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserByEmail not implemented")
 }
-func (UnimplementedUserServiceServer) DeleteUserByID(context.Context, *UserRequest) (*empty.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteUserByID not implemented")
+func (UnimplementedUserServiceServer) DeleteUserByEmail(context.Context, *UserRequest) (*empty.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteUserByEmail not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -131,56 +131,56 @@ func _UserService_InsertUser_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserService_GetUserByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _UserService_GetUserByEmail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServiceServer).GetUserByID(ctx, in)
+		return srv.(UserServiceServer).GetUserByEmail(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/users.UserService/GetUserByID",
+		FullMethod: "/users.UserService/GetUserByEmail",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).GetUserByID(ctx, req.(*UserRequest))
+		return srv.(UserServiceServer).GetUserByEmail(ctx, req.(*UserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserService_UpdateUserByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _UserService_UpdateUserByEmail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServiceServer).UpdateUserByID(ctx, in)
+		return srv.(UserServiceServer).UpdateUserByEmail(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/users.UserService/UpdateUserByID",
+		FullMethod: "/users.UserService/UpdateUserByEmail",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).UpdateUserByID(ctx, req.(*UpdateUserRequest))
+		return srv.(UserServiceServer).UpdateUserByEmail(ctx, req.(*UpdateUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserService_DeleteUserByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _UserService_DeleteUserByEmail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServiceServer).DeleteUserByID(ctx, in)
+		return srv.(UserServiceServer).DeleteUserByEmail(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/users.UserService/DeleteUserByID",
+		FullMethod: "/users.UserService/DeleteUserByEmail",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).DeleteUserByID(ctx, req.(*UserRequest))
+		return srv.(UserServiceServer).DeleteUserByEmail(ctx, req.(*UserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -197,16 +197,16 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserService_InsertUser_Handler,
 		},
 		{
-			MethodName: "GetUserByID",
-			Handler:    _UserService_GetUserByID_Handler,
+			MethodName: "GetUserByEmail",
+			Handler:    _UserService_GetUserByEmail_Handler,
 		},
 		{
-			MethodName: "UpdateUserByID",
-			Handler:    _UserService_UpdateUserByID_Handler,
+			MethodName: "UpdateUserByEmail",
+			Handler:    _UserService_UpdateUserByEmail_Handler,
 		},
 		{
-			MethodName: "DeleteUserByID",
-			Handler:    _UserService_DeleteUserByID_Handler,
+			MethodName: "DeleteUserByEmail",
+			Handler:    _UserService_DeleteUserByEmail_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
