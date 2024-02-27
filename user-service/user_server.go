@@ -4,7 +4,7 @@ import (
 	"log"
 	"net"
 
-	"github.com/Ali-Assar/CashWatch/authentication-service/db"
+	"github.com/Ali-Assar/CashWatch/db"
 	pb "github.com/Ali-Assar/CashWatch/types"
 	"github.com/Ali-Assar/CashWatch/user-service/methods"
 	"google.golang.org/grpc"

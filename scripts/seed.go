@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/Ali-Assar/CashWatch/authentication-service/db"
-	"github.com/Ali-Assar/CashWatch/authentication-service/handler"
+	"github.com/Ali-Assar/CashWatch/db"
 	"github.com/Ali-Assar/CashWatch/types"
+	"github.com/Ali-Assar/CashWatch/user-service/methods"
 )
 
 func main() {
@@ -26,9 +26,9 @@ func main() {
 	userStore := db.NewPostgreSQLUserStore(database)
 
 	user1 := addUser(userStore, "james", "foo")
-	fmt.Println("user token ->", handler.CreateTokenFromUser(user1))
+	fmt.Println("user token ->", methods.CreateTokenFromUser(user1))
 	user2 := addUser(userStore, "bar", "baz")
-	fmt.Println("user token ->", handler.CreateTokenFromUser(user2))
+	fmt.Println("user token ->", methods.CreateTokenFromUser(user2))
 }
 
 func addUser(store db.UserStorer, fn, ln string) *types.User {

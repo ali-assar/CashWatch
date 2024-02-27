@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/Ali-Assar/CashWatch/authentication-service/db"
+	"github.com/Ali-Assar/CashWatch/db"
 	pb "github.com/Ali-Assar/CashWatch/types"
 	"github.com/stretchr/testify/assert"
 )
