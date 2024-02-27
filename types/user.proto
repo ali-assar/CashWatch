@@ -20,6 +20,7 @@ service UserService {
     rpc GetUserByEmail(UserRequest) returns (User);
     rpc UpdateUserByEmail(UpdateUserRequest) returns (google.protobuf.Empty);
     rpc DeleteUserByEmail(UserRequest) returns (google.protobuf.Empty);
+    rpc Authenticate(AuthenticateParams) returns (AuthenticateResp);
 }
 message UpdateUserRequest{
     string firstName = 1;
@@ -29,3 +30,13 @@ message UpdateUserRequest{
 message UserRequest {
     string email = 1;
 }
+
+message AuthenticateParams{
+    string email = 1;
+    string password = 2;
+}
+message AuthenticateResp {
+    User user = 1;
+    string Token = 2;
+}
+
