@@ -1,13 +1,12 @@
 user:
-	@go build -o bin/user ./user-management
-	@./bin/user
-
-budget:
-	@go run budget/main.go
+	@go run user-service/user_server.go
 
 seed:
 	@go run scripts/seed.go
 	
+gate:
+	@go run api-gateway/gate.go
+
 test:
 	go test -v ./...
 
