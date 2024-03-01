@@ -21,7 +21,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	db.CreateTable(database)
+	db.CreateUserTable(database)
 
 	userStore := db.NewPostgreSQLUserStore(database)
 
