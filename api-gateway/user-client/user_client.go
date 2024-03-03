@@ -5,7 +5,7 @@ import (
 	"time"
 
 	pb "github.com/Ali-Assar/CashWatch/types"
-	"github.com/Ali-Assar/CashWatch/user-service/methods"
+	userhandler "github.com/Ali-Assar/CashWatch/user-service/user-handler"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -17,7 +17,7 @@ func Auth(userClient pb.UserServiceClient) fiber.Handler {
 		}
 
 		token := tokens[0]
-		claims, err := methods.ValidateToken(token)
+		claims, err := userhandler.ValidateToken(token)
 		if err != nil {
 			return c.Status(http.StatusUnauthorized).JSON(fiber.Map{"error": "Invalid credentials"})
 		}

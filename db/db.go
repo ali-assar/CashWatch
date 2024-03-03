@@ -47,6 +47,7 @@ func CreateCategoriesTable(db *sql.DB) {
 	createCategoriesTable := `
 	CREATE TABLE IF NOT EXISTS categories (
 		id SERIAL PRIMARY KEY,
+		name VARCHAR(200) NOT NULL,
 		user_id INT,
 		FOREIGN KEY (user_id) REFERENCES users(id)
 	)

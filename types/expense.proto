@@ -1,0 +1,43 @@
+// PATH="${PATH}:${HOME}/go/bin"
+syntax = "proto3";
+
+option go_package = "github.com/Ali-Assar/cashwatch/types";
+
+package users;
+
+import "google/protobuf/empty.proto";
+
+message Category{
+    string iD = 1;
+    string name = 2;
+    string user_id = 3;
+}
+
+message Expense {
+    string id = 1;
+    string user_id = 2;
+    string description = 3;
+    double amount = 4;
+    string category_id = 5;
+}
+
+service ExpenseService {
+    rpc InsertCategory(Category) returns (Category);
+    rpc GetCategoryById(CategoryRequest) returns (Category);
+    rpc UpdateCategoryById(Category) returns (google.protobuf.Empty);
+    rpc DeleteCategoryById(CategoryRequest) returns (google.protobuf.Empty);
+
+    rpc InsertExpense(Expense) returns (Expense);
+    rpc GetExpenseById(ExpenseRequest) returns (Expense);
+    rpc UpdateExpenseById(Expense) returns (google.protobuf.Empty);
+    rpc DeleteExpenseById(ExpenseRequest) returns (google.protobuf.Empty);
+}
+
+message CategoryRequest {
+    string id = 1;
+}
+
+message ExpenseRequest {
+    string id = 1;
+}
+

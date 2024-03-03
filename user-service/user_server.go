@@ -6,7 +6,7 @@ import (
 
 	"github.com/Ali-Assar/CashWatch/db"
 	pb "github.com/Ali-Assar/CashWatch/types"
-	"github.com/Ali-Assar/CashWatch/user-service/methods"
+	userhandler "github.com/Ali-Assar/CashWatch/user-service/user-handler"
 	"google.golang.org/grpc"
 )
 
@@ -19,7 +19,7 @@ func main() {
 
 	server := grpc.NewServer()
 	userStore := db.NewPostgreSQLUserStore(database)
-	pb.RegisterUserServiceServer(server, &methods.UserServiceServer{
+	pb.RegisterUserServiceServer(server, &userhandler.UserServiceServer{
 		UserStore: userStore,
 	})
 
