@@ -72,12 +72,79 @@ func (s *ExpenseServiceServer) UpdateCategoryByEmail(ctx context.Context, reqId 
 		return nil, status.Errorf(codes.InvalidArgument, "Validation error: %v", err)
 	}
 
-	// user := &pb.UpdateUserRequest{
-	// 	FirstName: req.FirstName,
-	// 	LastName:  req.LastName,
-	// }
-
 	err := s.ExpenseStore.UpdateCategoryById(ctx, reqId.GetId(), req)
+	if err != nil {
+		return nil, err
+	}
+
+	return &empty.Empty{}, nil
+}
+
+// ------- Expense CRUD ------
+
+func (s *ExpenseServiceServer) InsertExpense(ctx context.Context, req *pb.Expense) (*pb.Expense, error) {
+	// Validate request
+	validate := validator.New()
+	if err := validate.Struct(req); err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "Validation error: %v", err)
+	}
+
+	expense := &pb.Expense{
+		ID:          req.ID,
+		Description: req.Description,
+		Amount:      req.Amount,
+		CategoryId:  req.CategoryId,
+		UserId:      req.UserId,
+	}
+
+	insertedExpense, err := s.ExpenseStore.InsertExpense(ctx, expense)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.Expense{ID: insertedExpense.ID}, nil
+}
+
+func (s *ExpenseServiceServer) GetExpanse(ctx context.Context, req *pb.ExpenseRequest) (*pb.Expense, error) {
+	validate := validator.New()
+	if err := validate.Struct(req); err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "validation error: %v", err)
+	}
+
+	fetchedExpanse, err := s.ExpenseStore.GetExpenseById(ctx, req.GetId())
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.Expense{
+		ID:          fetchedExpanse.ID,
+		Description: fetchedExpanse.Description,
+		Amount:      fetchedExpanse.Amount,
+		CategoryId:  fetchedExpanse.CategoryId,
+		UserId:      fetchedExpanse.UserId,
+	}, nil
+}
+
+func (s *ExpenseServiceServer) DeleteExpanseByID(ctx context.Context, req pb.ExpenseRequest) (*empty.Empty, error) {
+	validate := validator.New()
+	if err := validate.Struct(req); err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "validation error: %v", err)
+	}
+
+	err := s.ExpenseStore.DeleteExpenseById(ctx, req.GetId())
+	if err != nil {
+		return nil, err
+	}
+	return &empty.Empty{}, nil
+}
+
+func (s *ExpenseServiceServer) UpdateExpenseByEmail(ctx context.Context, reqId *pb.ExpenseRequest, req *pb.Expense) (*empty.Empty, error) {
+	validate := validator.New()
+	if err := validate.Struct(req); err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "Validation error: %v", err)
+	}
+
+	err := s.ExpenseStore.UpdateExpenseById(ctx, reqId.GetId(), req)
 	if err != nil {
 		return nil, err
 	}

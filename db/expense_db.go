@@ -14,9 +14,9 @@ type ExpenseStorer interface {
 	DeleteCategoryById(context.Context, string) error
 
 	InsertExpense(context.Context, *pb.Expense) (*pb.Expense, error)
-	GetExpenseById(context.Context, *pb.ExpenseRequest) (*pb.Expense, error)
-	UpdateExpenseById(context.Context, *pb.Expense) error
-	DeleteExpenseById(context.Context, *pb.ExpenseRequest) error
+	GetExpenseById(context.Context, string) (*pb.Expense, error)
+	UpdateExpenseById(context.Context, string, *pb.Expense) error
+	DeleteExpenseById(context.Context, string) error
 }
 
 type PostgreSQLExpenseStore struct {
@@ -54,7 +54,7 @@ func (store *PostgreSQLExpenseStore) UpdateCategoryById(ctx context.Context, id 
 	return err
 }
 
-func (store *PostgreSQLExpenseStore) DeleteCategoryById(ctx context.Context, id *pb.CategoryRequest) error {
+func (store *PostgreSQLExpenseStore) DeleteCategoryById(ctx context.Context, id string) error {
 	query := "DELETE FROM categories WHERE id = $1"
 	_, err := store.db.ExecContext(ctx, query, id)
 	return err
@@ -62,13 +62,13 @@ func (store *PostgreSQLExpenseStore) DeleteCategoryById(ctx context.Context, id 
 
 func (store *PostgreSQLExpenseStore) InsertExpense(ctx context.Context, expense *pb.Expense) (*pb.Expense, error) {
 	query := "INSERT INTO expenses (user_id, description, amount) VALUES ($1, $2, $3) RETURNING id"
-	if err := store.db.QueryRowContext(ctx, query, expense.UserId, expense.Description, expense.Amount).Scan(&expense.Id); err != nil {
+	if err := store.db.QueryRowContext(ctx, query, expense.UserId, expense.Description, expense.Amount).Scan(&expense.ID); err != nil {
 		return nil, err
 	}
 	return expense, nil
 }
 
-func (store *PostgreSQLExpenseStore) GetExpenseById(ctx context.Context, id *pb.ExpenseRequest) (*pb.Expense, error) {
+func (store *PostgreSQLExpenseStore) GetExpenseById(ctx context.Context, id string) (*pb.Expense, error) {
 	query := "SELECT id, user_id, description, amount, category_id FROM expenses WHERE id = $1"
 	row := store.db.QueryRowContext(ctx, query, id)
 	var expense pb.Expense
@@ -85,7 +85,7 @@ func (store *PostgreSQLExpenseStore) UpdateExpenseById(ctx context.Context, id s
 	return err
 }
 
-func (store *PostgreSQLExpenseStore) DeleteExpenseById(ctx context.Context, id *pb.ExpenseRequest) error {
+func (store *PostgreSQLExpenseStore) DeleteExpenseById(ctx context.Context, id string) error {
 	query := "DELETE FROM expenses WHERE id = $1"
 	_, err := store.db.ExecContext(ctx, query, id)
 	return err
