@@ -5,7 +5,7 @@ import (
 	"net"
 
 	"github.com/Ali-Assar/CashWatch/db"
-	expensehandler "github.com/Ali-Assar/CashWatch/expense-service/expense-handler"
+	expensehandler "github.com/Ali-Assar/CashWatch/expense-service/expense-handlers"
 	pb "github.com/Ali-Assar/CashWatch/types"
 	"google.golang.org/grpc"
 )
