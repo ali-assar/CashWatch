@@ -9,9 +9,9 @@ import (
 
 type ExpenseStorer interface {
 	InsertCategory(context.Context, *pb.Category) (*pb.Category, error)
-	GetCategoryById(context.Context, *pb.CategoryRequest) (*pb.Category, error)
+	GetCategoryById(context.Context, string) (*pb.Category, error)
 	UpdateCategoryById(context.Context, string, *pb.Category) error
-	DeleteCategoryById(context.Context, *pb.CategoryRequest) error
+	DeleteCategoryById(context.Context, string) error
 
 	InsertExpense(context.Context, *pb.Expense) (*pb.Expense, error)
 	GetExpenseById(context.Context, *pb.ExpenseRequest) (*pb.Expense, error)
@@ -37,7 +37,7 @@ func (store *PostgreSQLExpenseStore) InsertCategory(ctx context.Context, categor
 	return category, nil
 }
 
-func (store *PostgreSQLExpenseStore) GetCategoryById(ctx context.Context, id *pb.CategoryRequest) (*pb.Category, error) {
+func (store *PostgreSQLExpenseStore) GetCategoryById(ctx context.Context, id string) (*pb.Category, error) {
 	query := "SELECT id, name, user_id FROM categories WHERE id = $1"
 	row := store.db.QueryRowContext(ctx, query, id)
 	var category pb.Category
