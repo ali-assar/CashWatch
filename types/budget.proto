@@ -20,7 +20,7 @@ message Income{
     string iD = 1;
     string title = 2;
     string amount = 3;
-    string recievedAt = 4;
+    string receivedAt = 4;
     string user_id = 5;
 }
 

@@ -85,7 +85,7 @@ func CreateBudgetTable(db *sql.DB) {
 		expireAT TIMESTAMP,
 		setAt TIMESTAMP,
 		expireAt TIMESTAMP,
-		user_id INT
+		
 	)
 	`
 	_, err := db.Exec(createBudgetsTable)
@@ -98,11 +98,11 @@ func CreateIncomeTable(db *sql.DB) {
 	createIncomeTable := `
 	CREATE TABLE IF NOT EXISTS budgets (
 		id serial PRIMARY KEY,
-		user_id INT,
+		user_id INT
 		title VARCHAR(200) NOT NULL,
 		amount NUMERIC(10,2),
 		receivedAt TIMESTAMP,
-		user_id INT
+		
 	)
 	`
 	_, err := db.Exec(createIncomeTable)
