@@ -1,0 +1,45 @@
+// PATH="${PATH}:${HOME}/go/bin"
+syntax = "proto3";
+
+option go_package = "github.com/Ali-Assar/cashwatch/types";
+
+package users;
+
+import "google/protobuf/empty.proto";
+
+message Budget{
+    string iD = 1;
+    string title = 2;
+    string amount = 3;
+    string expireAt = 4;
+    string setAt = 5;
+    string user_id = 6;
+}
+
+message Income{
+    string iD = 1;
+    string title = 2;
+    string amount = 3;
+    string recievedAt = 4;
+    string user_id = 5;
+}
+
+service BudgetService {
+    rpc InsertBudget(Budget) returns (Budget);
+    rpc GetBudgetByID(BudgetRequest) returns (Budget);
+    rpc UpdateBudgetrByID(Budget) returns (google.protobuf.Empty);
+    rpc DeleteBudgetByID(BudgetRequest) returns (google.protobuf.Empty);
+
+    rpc InsertIncome(Income) returns (Budget);
+    rpc GetIncomeByID(IncomeRequest) returns (Budget);
+    rpc UpdateIncomeByID(Income) returns (google.protobuf.Empty);
+    rpc DeleteIncomeByID(IncomeRequest) returns (google.protobuf.Empty);
+}
+
+message BudgetRequest {
+    string id = 1;
+}
+
+message IncomeRequest {
+    string id = 1;
+}

@@ -74,3 +74,39 @@ func CreateExpansesTable(db *sql.DB) {
 		log.Fatal("Could not create expenses table " + err.Error())
 	}
 }
+
+func CreateBudgetTable(db *sql.DB) {
+	createBudgetsTable := `
+	CREATE TABLE IF NOT EXISTS budgets (
+		id serial PRIMARY KEY,
+		user_id INT,
+		title VARCHAR(200) NOT NULL,
+		amount NUMERIC(10,2),
+		expireAT TIMESTAMP,
+		setAt TIMESTAMP,
+		expireAt TIMESTAMP,
+		user_id INT
+	)
+	`
+	_, err := db.Exec(createBudgetsTable)
+	if err != nil {
+		log.Fatal("Error creating budgets table:", err)
+	}
+}
+
+func CreateIncomeTable(db *sql.DB) {
+	createIncomeTable := `
+	CREATE TABLE IF NOT EXISTS budgets (
+		id serial PRIMARY KEY,
+		user_id INT,
+		title VARCHAR(200) NOT NULL,
+		amount NUMERIC(10,2),
+		receivedAt TIMESTAMP,
+		user_id INT
+	)
+	`
+	_, err := db.Exec(createIncomeTable)
+	if err != nil {
+		log.Fatal("Error creating budgets table:", err)
+	}
+}
