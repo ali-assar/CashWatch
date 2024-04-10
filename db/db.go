@@ -96,7 +96,7 @@ func CreateBudgetTable(db *sql.DB) {
 
 func CreateIncomeTable(db *sql.DB) {
 	createIncomeTable := `
-	CREATE TABLE IF NOT EXISTS budgets (
+	CREATE TABLE IF NOT EXISTS income (
 		id serial PRIMARY KEY,
 		user_id INT
 		title VARCHAR(200) NOT NULL,
@@ -107,6 +107,6 @@ func CreateIncomeTable(db *sql.DB) {
 	`
 	_, err := db.Exec(createIncomeTable)
 	if err != nil {
-		log.Fatal("Error creating budgets table:", err)
+		log.Fatal("Error creating income table:", err)
 	}
 }

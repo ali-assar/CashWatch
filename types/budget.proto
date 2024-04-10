@@ -30,16 +30,16 @@ service BudgetService {
     rpc UpdateBudgetrByID(Budget) returns (google.protobuf.Empty);
     rpc DeleteBudgetByID(BudgetRequest) returns (google.protobuf.Empty);
 
-    rpc InsertIncome(Income) returns (Budget);
-    rpc GetIncomeByID(IncomeRequest) returns (Budget);
+    rpc InsertIncome(Income) returns (Income);
+    rpc GetIncomeByID(IncomeRequest) returns (Income);
     rpc UpdateIncomeByID(Income) returns (google.protobuf.Empty);
     rpc DeleteIncomeByID(IncomeRequest) returns (google.protobuf.Empty);
 }
 
 message BudgetRequest {
-    string id = 1;
+    string iD = 1;
 }
 
 message IncomeRequest {
-    string id = 1;
+    string iD = 1;
 }

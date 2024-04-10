@@ -27,8 +27,8 @@ type BudgetServiceClient interface {
 	GetBudgetByID(ctx context.Context, in *BudgetRequest, opts ...grpc.CallOption) (*Budget, error)
 	UpdateBudgetrByID(ctx context.Context, in *Budget, opts ...grpc.CallOption) (*empty.Empty, error)
 	DeleteBudgetByID(ctx context.Context, in *BudgetRequest, opts ...grpc.CallOption) (*empty.Empty, error)
-	InsertIncome(ctx context.Context, in *Income, opts ...grpc.CallOption) (*Budget, error)
-	GetIncomeByID(ctx context.Context, in *IncomeRequest, opts ...grpc.CallOption) (*Budget, error)
+	InsertIncome(ctx context.Context, in *Income, opts ...grpc.CallOption) (*Income, error)
+	GetIncomeByID(ctx context.Context, in *IncomeRequest, opts ...grpc.CallOption) (*Income, error)
 	UpdateIncomeByID(ctx context.Context, in *Income, opts ...grpc.CallOption) (*empty.Empty, error)
 	DeleteIncomeByID(ctx context.Context, in *IncomeRequest, opts ...grpc.CallOption) (*empty.Empty, error)
 }
@@ -77,8 +77,8 @@ func (c *budgetServiceClient) DeleteBudgetByID(ctx context.Context, in *BudgetRe
 	return out, nil
 }
 
-func (c *budgetServiceClient) InsertIncome(ctx context.Context, in *Income, opts ...grpc.CallOption) (*Budget, error) {
-	out := new(Budget)
+func (c *budgetServiceClient) InsertIncome(ctx context.Context, in *Income, opts ...grpc.CallOption) (*Income, error) {
+	out := new(Income)
 	err := c.cc.Invoke(ctx, "/users.BudgetService/InsertIncome", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -86,8 +86,8 @@ func (c *budgetServiceClient) InsertIncome(ctx context.Context, in *Income, opts
 	return out, nil
 }
 
-func (c *budgetServiceClient) GetIncomeByID(ctx context.Context, in *IncomeRequest, opts ...grpc.CallOption) (*Budget, error) {
-	out := new(Budget)
+func (c *budgetServiceClient) GetIncomeByID(ctx context.Context, in *IncomeRequest, opts ...grpc.CallOption) (*Income, error) {
+	out := new(Income)
 	err := c.cc.Invoke(ctx, "/users.BudgetService/GetIncomeByID", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -121,8 +121,8 @@ type BudgetServiceServer interface {
 	GetBudgetByID(context.Context, *BudgetRequest) (*Budget, error)
 	UpdateBudgetrByID(context.Context, *Budget) (*empty.Empty, error)
 	DeleteBudgetByID(context.Context, *BudgetRequest) (*empty.Empty, error)
-	InsertIncome(context.Context, *Income) (*Budget, error)
-	GetIncomeByID(context.Context, *IncomeRequest) (*Budget, error)
+	InsertIncome(context.Context, *Income) (*Income, error)
+	GetIncomeByID(context.Context, *IncomeRequest) (*Income, error)
 	UpdateIncomeByID(context.Context, *Income) (*empty.Empty, error)
 	DeleteIncomeByID(context.Context, *IncomeRequest) (*empty.Empty, error)
 	mustEmbedUnimplementedBudgetServiceServer()
@@ -144,10 +144,10 @@ func (UnimplementedBudgetServiceServer) UpdateBudgetrByID(context.Context, *Budg
 func (UnimplementedBudgetServiceServer) DeleteBudgetByID(context.Context, *BudgetRequest) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteBudgetByID not implemented")
 }
-func (UnimplementedBudgetServiceServer) InsertIncome(context.Context, *Income) (*Budget, error) {
+func (UnimplementedBudgetServiceServer) InsertIncome(context.Context, *Income) (*Income, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method InsertIncome not implemented")
 }
-func (UnimplementedBudgetServiceServer) GetIncomeByID(context.Context, *IncomeRequest) (*Budget, error) {
+func (UnimplementedBudgetServiceServer) GetIncomeByID(context.Context, *IncomeRequest) (*Income, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetIncomeByID not implemented")
 }
 func (UnimplementedBudgetServiceServer) UpdateIncomeByID(context.Context, *Income) (*empty.Empty, error) {
