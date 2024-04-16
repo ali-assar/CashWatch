@@ -58,7 +58,7 @@ func (s *BudgetServiceServer) GetBudget(ctx context.Context, req *pb.BudgetReque
 	}, nil
 }
 
-func (s *BudgetServiceServer) DeleteBudgetByID(ctx context.Context, req pb.BudgetRequest) (*empty.Empty, error) {
+func (s *BudgetServiceServer) DeleteBudgetByID(ctx context.Context, req *pb.BudgetRequest) (*empty.Empty, error) {
 	validate := validator.New()
 	if err := validate.Struct(req); err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, "validation error: %v", err)
@@ -127,7 +127,7 @@ func (s *BudgetServiceServer) GetIncome(ctx context.Context, req *pb.IncomeReque
 	}, nil
 }
 
-func (s *BudgetServiceServer) DeleteIncomeByID(ctx context.Context, req pb.IncomeRequest) (*empty.Empty, error) {
+func (s *BudgetServiceServer) DeleteIncomeByID(ctx context.Context, req *pb.IncomeRequest) (*empty.Empty, error) {
 	validate := validator.New()
 	if err := validate.Struct(req); err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, "validation error: %v", err)

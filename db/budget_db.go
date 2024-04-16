@@ -54,7 +54,7 @@ func (store *PostgreSQLBudgetStore) UpdateBudgetByID(ctx context.Context, id str
 	return err
 }
 
-func (store *PostgreSQLBudgetStore) DeleteBudgetById(ctx context.Context, id string) error {
+func (store *PostgreSQLBudgetStore) DeleteBudgetByID(ctx context.Context, id string) error {
 	query := "DELETE FROM budgets WHERE id = $1"
 	_, err := store.db.ExecContext(ctx, query, id)
 	return err
@@ -85,7 +85,7 @@ func (store *PostgreSQLBudgetStore) UpdateIncomeByID(ctx context.Context, id str
 	return err
 }
 
-func (store *PostgreSQLBudgetStore) DeleteIncomeById(ctx context.Context, id string) error {
+func (store *PostgreSQLBudgetStore) DeleteIncomeByID(ctx context.Context, id string) error {
 	query := "DELETE FROM incomes WHERE id = $1"
 	_, err := store.db.ExecContext(ctx, query, id)
 	return err
